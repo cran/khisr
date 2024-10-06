@@ -60,7 +60,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
 { counter-reset: source-line 0; }
@@ -340,7 +340,6 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 
 
-<pre><code>No token available. Code chunks will not be evaluated.</code></pre>
 <p>The <code>khisr</code> R package simplifies interaction with the
 District Health Information System 2 (DHIS2) platform. Designed for
 researchers and public health professionals, <code>khisr</code>
@@ -364,11 +363,11 @@ environment. Refer to the comprehensive guide, <a href="https://khisr.damurka.co
 Your Credentials</a>, for detailed instructions on setting and managing
 credentials effectively.</p></li>
 </ol>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="co"># Set the credentials using username and password</span></span>
-<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="fu">khis_cred</span>(<span class="at">username =</span> <span class="st">&#39;your-dhis2-username&#39;</span>, <span class="at">password =</span> <span class="st">&#39;your-dhis2-password&#39;</span>, <span class="at">base_url =</span> <span class="st">&#39;https://&lt;your dhis2 instance&gt;&#39;</span>)</span>
-<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="co"># Set credentials using configuration path</span></span>
-<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="fu">khis_cred</span>(<span class="at">config_path =</span> <span class="st">&#39;path/to/secret.json&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="co"># Set the credentials using username and password</span></span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">khis_cred</span>(<span class="at">username =</span> <span class="st">&#39;your-dhis2-username&#39;</span>, <span class="at">password =</span> <span class="st">&#39;your-dhis2-password&#39;</span>, <span class="at">base_url =</span> <span class="st">&#39;https://&lt;your dhis2 instance&gt;&#39;</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="co"># Set credentials using configuration path</span></span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a><span class="fu">khis_cred</span>(<span class="at">config_path =</span> <span class="st">&#39;path/to/secret.json&#39;</span>)</span></code></pre></div>
 <p><strong>Note</strong>: Replace placeholders like
 ‘<em>your-dhis2-username</em>’ and ‘<em>path/to/your/secret.json</em>’
 with your actual credentials and file path.</p>
@@ -646,24 +645,51 @@ operators:</p>
 <div id="working-with-metadata-filters" class="section level3">
 <h3>Working with metadata filters</h3>
 <p>Basic usage of the metadata filter</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="co"># Retrieve organisation units by county (level 2)</span></span>
-<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>county <span class="ot">&lt;-</span> <span class="fu">get_organisation_units</span>(level <span class="sc">%.eq%</span> <span class="st">&#39;2&#39;</span>)</span>
-<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>county</span>
-<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a></span>
-<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a><span class="co"># Retrieve county by name (Mombasa)</span></span>
-<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a>county <span class="ot">&lt;-</span> <span class="fu">get_organisation_units</span>(level <span class="sc">%.eq%</span> <span class="st">&#39;2&#39;</span>,</span>
-<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a>                                 name <span class="sc">%.like%</span> <span class="st">&#39;mombasa&#39;</span>)</span>
-<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a>county</span>
-<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a></span>
-<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a>data_element_id <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&#39;cXe64Yk0QMY&#39;</span>, <span class="st">&#39;XEX93uLsAm2&#39;</span>)</span>
-<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a></span>
-<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a><span class="co"># Retrieve data elements by ID using operator in</span></span>
-<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a>data_elements <span class="ot">&lt;-</span> <span class="fu">get_data_elements</span>(id <span class="sc">%.in%</span> data_element_id)</span>
-<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a>data_elements</span>
-<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a></span>
-<span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a><span class="co"># Retrieve data elements by filtering using dataElementGroups</span></span>
-<span id="cb3-17"><a href="#cb3-17" tabindex="-1"></a>data_elements <span class="ot">&lt;-</span> <span class="fu">get_data_elements</span>(dataElementGroups.name <span class="sc">%.like%</span> <span class="st">&#39;moh 705&#39;</span>)</span>
-<span id="cb3-18"><a href="#cb3-18" tabindex="-1"></a>data_elements</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="co"># Retrieve organisation units by county (level 2)</span></span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>county <span class="ot">&lt;-</span> <span class="fu">get_organisation_units</span>(level <span class="sc">%.eq%</span> <span class="st">&#39;2&#39;</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>county</span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="co">#&gt; # A tibble: 47 × 2</span></span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="co">#&gt;   name                   id         </span></span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;                  &lt;chr&gt;      </span></span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="co">#&gt; 1 Baringo County         vvOK1BxTbet</span></span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a><span class="co">#&gt; 2 Bomet County           HMNARUV2CW4</span></span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a><span class="co">#&gt; 3 Bungoma County         KGHhQ5GLd4k</span></span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a><span class="co">#&gt; 4 Busia County           Tvf1zgVZ0K4</span></span>
+<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a><span class="co">#&gt; 5 Elgeyo Marakwet County MqnLxQBigG0</span></span>
+<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a><span class="co">#&gt; # ℹ 42 more rows</span></span>
+<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a></span>
+<span id="cb2-14"><a href="#cb2-14" tabindex="-1"></a><span class="co"># Retrieve county by name (Mombasa)</span></span>
+<span id="cb2-15"><a href="#cb2-15" tabindex="-1"></a>county <span class="ot">&lt;-</span> <span class="fu">get_organisation_units</span>(level <span class="sc">%.eq%</span> <span class="st">&#39;2&#39;</span>,</span>
+<span id="cb2-16"><a href="#cb2-16" tabindex="-1"></a>                                 name <span class="sc">%.like%</span> <span class="st">&#39;mombasa&#39;</span>)</span>
+<span id="cb2-17"><a href="#cb2-17" tabindex="-1"></a>county</span>
+<span id="cb2-18"><a href="#cb2-18" tabindex="-1"></a><span class="co">#&gt; # A tibble: 1 × 2</span></span>
+<span id="cb2-19"><a href="#cb2-19" tabindex="-1"></a><span class="co">#&gt;   name           id         </span></span>
+<span id="cb2-20"><a href="#cb2-20" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;          &lt;chr&gt;      </span></span>
+<span id="cb2-21"><a href="#cb2-21" tabindex="-1"></a><span class="co">#&gt; 1 Mombasa County wsBsC6gjHvn</span></span>
+<span id="cb2-22"><a href="#cb2-22" tabindex="-1"></a></span>
+<span id="cb2-23"><a href="#cb2-23" tabindex="-1"></a>data_element_id <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&#39;cXe64Yk0QMY&#39;</span>, <span class="st">&#39;XEX93uLsAm2&#39;</span>)</span>
+<span id="cb2-24"><a href="#cb2-24" tabindex="-1"></a></span>
+<span id="cb2-25"><a href="#cb2-25" tabindex="-1"></a><span class="co"># Retrieve data elements by ID using operator in</span></span>
+<span id="cb2-26"><a href="#cb2-26" tabindex="-1"></a>data_elements <span class="ot">&lt;-</span> <span class="fu">get_data_elements</span>(id <span class="sc">%.in%</span> data_element_id)</span>
+<span id="cb2-27"><a href="#cb2-27" tabindex="-1"></a>data_elements</span>
+<span id="cb2-28"><a href="#cb2-28" tabindex="-1"></a><span class="co">#&gt; # A tibble: 2 × 2</span></span>
+<span id="cb2-29"><a href="#cb2-29" tabindex="-1"></a><span class="co">#&gt;   name         id         </span></span>
+<span id="cb2-30"><a href="#cb2-30" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;        &lt;chr&gt;      </span></span>
+<span id="cb2-31"><a href="#cb2-31" tabindex="-1"></a><span class="co">#&gt; 1 CBE-Abnormal XEX93uLsAm2</span></span>
+<span id="cb2-32"><a href="#cb2-32" tabindex="-1"></a><span class="co">#&gt; 2 CBE-Normal   cXe64Yk0QMY</span></span>
+<span id="cb2-33"><a href="#cb2-33" tabindex="-1"></a></span>
+<span id="cb2-34"><a href="#cb2-34" tabindex="-1"></a><span class="co"># Retrieve data elements by filtering using dataElementGroups</span></span>
+<span id="cb2-35"><a href="#cb2-35" tabindex="-1"></a>data_elements <span class="ot">&lt;-</span> <span class="fu">get_data_elements</span>(dataElementGroups.name <span class="sc">%.like%</span> <span class="st">&#39;moh 705&#39;</span>)</span>
+<span id="cb2-36"><a href="#cb2-36" tabindex="-1"></a>data_elements</span>
+<span id="cb2-37"><a href="#cb2-37" tabindex="-1"></a><span class="co">#&gt; # A tibble: 96 × 2</span></span>
+<span id="cb2-38"><a href="#cb2-38" tabindex="-1"></a><span class="co">#&gt;   name                        id         </span></span>
+<span id="cb2-39"><a href="#cb2-39" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;                       &lt;chr&gt;      </span></span>
+<span id="cb2-40"><a href="#cb2-40" tabindex="-1"></a><span class="co">#&gt; 1 Abortion                    IrWSgk9GsUm</span></span>
+<span id="cb2-41"><a href="#cb2-41" tabindex="-1"></a><span class="co">#&gt; 2 All other diseases          KxT47tbKHsd</span></span>
+<span id="cb2-42"><a href="#cb2-42" tabindex="-1"></a><span class="co">#&gt; 3 Anaemia cases               kkUHOwGMawD</span></span>
+<span id="cb2-43"><a href="#cb2-43" tabindex="-1"></a><span class="co">#&gt; 4 Arthritis, Joint pains etc. waNhWrS3HL6</span></span>
+<span id="cb2-44"><a href="#cb2-44" tabindex="-1"></a><span class="co">#&gt; 5 Asthma                      L82lvvxVaqt</span></span>
+<span id="cb2-45"><a href="#cb2-45" tabindex="-1"></a><span class="co">#&gt; # ℹ 91 more rows</span></span></code></pre></div>
 </div>
 </div>
 <div id="data-analytics" class="section level2">
@@ -793,46 +819,82 @@ will not be included as dimensions in the actual response.</p>
 define the dimensions you want to include in the query response.
 Leverage the infix operators %.d% for concise and readable code.</li>
 </ul>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="co"># To include a list dimensions for data elements id, dataset ids</span></span>
-<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>dx <span class="sc">%.d%</span> <span class="fu">c</span>(<span class="st">&#39;dimension-id-1&#39;</span>, <span class="st">&#39;dimension-id-2&#39;</span>)</span>
-<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a></span>
-<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>pe <span class="sc">%.d%</span> <span class="st">&#39;LAST_YEAR&#39;</span></span>
-<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a></span>
-<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>ou <span class="sc">%.d%</span> <span class="st">&#39;USER_ORGUNIT&#39;</span></span>
-<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a></span>
-<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a><span class="co"># showing in the analytics</span></span>
-<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a><span class="fu">get_analytics</span>(</span>
-<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a>    dx <span class="sc">%.d%</span> <span class="fu">c</span>(<span class="st">&#39;siOyOiOJpI8&#39;</span>, <span class="st">&#39;Lt0FqtnHraW&#39;</span>, <span class="st">&#39;OoakJhWiyZp&#39;</span>),</span>
-<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a>    pe <span class="sc">%.d%</span> <span class="st">&#39;LAST_YEAR&#39;</span>,</span>
-<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a>    ou <span class="sc">%.d%</span> <span class="fu">c</span>(<span class="st">&#39;qKzosKQPl6G&#39;</span>)</span>
-<span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a>)</span>
-<span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a></span>
-<span id="cb4-15"><a href="#cb4-15" tabindex="-1"></a><span class="co"># Using the startDate and endDate with organisation unit keyword &#39;USER_ORGUNIT&#39;</span></span>
-<span id="cb4-16"><a href="#cb4-16" tabindex="-1"></a><span class="fu">get_analytics</span>(</span>
-<span id="cb4-17"><a href="#cb4-17" tabindex="-1"></a>    dx <span class="sc">%.d%</span> <span class="fu">c</span>(<span class="st">&#39;siOyOiOJpI8&#39;</span>, <span class="st">&#39;Lt0FqtnHraW&#39;</span>, <span class="st">&#39;OoakJhWiyZp&#39;</span>),</span>
-<span id="cb4-18"><a href="#cb4-18" tabindex="-1"></a>    ou <span class="sc">%.d%</span> <span class="st">&#39;USER_ORGUNIT&#39;</span>,</span>
-<span id="cb4-19"><a href="#cb4-19" tabindex="-1"></a>    pe <span class="sc">%.d%</span> <span class="st">&#39;all&#39;</span>,</span>
-<span id="cb4-20"><a href="#cb4-20" tabindex="-1"></a>    <span class="at">startDate =</span> <span class="st">&#39;2023-07-01&#39;</span>,</span>
-<span id="cb4-21"><a href="#cb4-21" tabindex="-1"></a>    <span class="at">endDate =</span> <span class="st">&#39;2023-12-31&#39;</span></span>
-<span id="cb4-22"><a href="#cb4-22" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="co"># To include a list dimensions for data elements id, dataset ids</span></span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>dx <span class="sc">%.d%</span> <span class="fu">c</span>(<span class="st">&#39;dimension-id-1&#39;</span>, <span class="st">&#39;dimension-id-2&#39;</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="co">#&gt; &lt;spliced&gt;</span></span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="co">#&gt; $dimension</span></span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a><span class="co">#&gt; [1] &quot;dx:dimension-id-1;dimension-id-2&quot;</span></span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a>pe <span class="sc">%.d%</span> <span class="st">&#39;LAST_YEAR&#39;</span></span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a><span class="co">#&gt; &lt;spliced&gt;</span></span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a><span class="co">#&gt; $dimension</span></span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a><span class="co">#&gt; [1] &quot;pe:LAST_YEAR&quot;</span></span>
+<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a></span>
+<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a>ou <span class="sc">%.d%</span> <span class="st">&#39;USER_ORGUNIT&#39;</span></span>
+<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a><span class="co">#&gt; &lt;spliced&gt;</span></span>
+<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a><span class="co">#&gt; $dimension</span></span>
+<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a><span class="co">#&gt; [1] &quot;ou:USER_ORGUNIT&quot;</span></span>
+<span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a></span>
+<span id="cb3-17"><a href="#cb3-17" tabindex="-1"></a><span class="co"># showing in the analytics</span></span>
+<span id="cb3-18"><a href="#cb3-18" tabindex="-1"></a><span class="fu">get_analytics</span>(</span>
+<span id="cb3-19"><a href="#cb3-19" tabindex="-1"></a>    dx <span class="sc">%.d%</span> <span class="fu">c</span>(<span class="st">&#39;siOyOiOJpI8&#39;</span>, <span class="st">&#39;Lt0FqtnHraW&#39;</span>, <span class="st">&#39;OoakJhWiyZp&#39;</span>),</span>
+<span id="cb3-20"><a href="#cb3-20" tabindex="-1"></a>    pe <span class="sc">%.d%</span> <span class="st">&#39;LAST_YEAR&#39;</span>,</span>
+<span id="cb3-21"><a href="#cb3-21" tabindex="-1"></a>    ou <span class="sc">%.d%</span> <span class="fu">c</span>(<span class="st">&#39;qKzosKQPl6G&#39;</span>)</span>
+<span id="cb3-22"><a href="#cb3-22" tabindex="-1"></a>)</span>
+<span id="cb3-23"><a href="#cb3-23" tabindex="-1"></a><span class="co">#&gt; # A tibble: 3 × 4</span></span>
+<span id="cb3-24"><a href="#cb3-24" tabindex="-1"></a><span class="co">#&gt;   dx          pe    ou          value</span></span>
+<span id="cb3-25"><a href="#cb3-25" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;       &lt;chr&gt; &lt;chr&gt;       &lt;dbl&gt;</span></span>
+<span id="cb3-26"><a href="#cb3-26" tabindex="-1"></a><span class="co">#&gt; 1 OoakJhWiyZp 2023  qKzosKQPl6G  5092</span></span>
+<span id="cb3-27"><a href="#cb3-27" tabindex="-1"></a><span class="co">#&gt; 2 Lt0FqtnHraW 2023  qKzosKQPl6G 31101</span></span>
+<span id="cb3-28"><a href="#cb3-28" tabindex="-1"></a><span class="co">#&gt; 3 siOyOiOJpI8 2023  qKzosKQPl6G 20554</span></span>
+<span id="cb3-29"><a href="#cb3-29" tabindex="-1"></a></span>
+<span id="cb3-30"><a href="#cb3-30" tabindex="-1"></a><span class="co"># Using the startDate and endDate with organisation unit keyword &#39;USER_ORGUNIT&#39;</span></span>
+<span id="cb3-31"><a href="#cb3-31" tabindex="-1"></a><span class="fu">get_analytics</span>(</span>
+<span id="cb3-32"><a href="#cb3-32" tabindex="-1"></a>    dx <span class="sc">%.d%</span> <span class="fu">c</span>(<span class="st">&#39;siOyOiOJpI8&#39;</span>, <span class="st">&#39;Lt0FqtnHraW&#39;</span>, <span class="st">&#39;OoakJhWiyZp&#39;</span>),</span>
+<span id="cb3-33"><a href="#cb3-33" tabindex="-1"></a>    ou <span class="sc">%.d%</span> <span class="st">&#39;USER_ORGUNIT&#39;</span>,</span>
+<span id="cb3-34"><a href="#cb3-34" tabindex="-1"></a>    pe <span class="sc">%.d%</span> <span class="st">&#39;all&#39;</span>,</span>
+<span id="cb3-35"><a href="#cb3-35" tabindex="-1"></a>    <span class="at">startDate =</span> <span class="st">&#39;2023-07-01&#39;</span>,</span>
+<span id="cb3-36"><a href="#cb3-36" tabindex="-1"></a>    <span class="at">endDate =</span> <span class="st">&#39;2023-12-31&#39;</span></span>
+<span id="cb3-37"><a href="#cb3-37" tabindex="-1"></a>)</span>
+<span id="cb3-38"><a href="#cb3-38" tabindex="-1"></a><span class="co">#&gt; # A tibble: 18 × 4</span></span>
+<span id="cb3-39"><a href="#cb3-39" tabindex="-1"></a><span class="co">#&gt;   dx          ou          pe       value</span></span>
+<span id="cb3-40"><a href="#cb3-40" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;       &lt;chr&gt;       &lt;chr&gt;    &lt;dbl&gt;</span></span>
+<span id="cb3-41"><a href="#cb3-41" tabindex="-1"></a><span class="co">#&gt; 1 siOyOiOJpI8 HfVjCurKxh2 202310  752870</span></span>
+<span id="cb3-42"><a href="#cb3-42" tabindex="-1"></a><span class="co">#&gt; 2 siOyOiOJpI8 HfVjCurKxh2 202312  651287</span></span>
+<span id="cb3-43"><a href="#cb3-43" tabindex="-1"></a><span class="co">#&gt; 3 Lt0FqtnHraW HfVjCurKxh2 202307 1122436</span></span>
+<span id="cb3-44"><a href="#cb3-44" tabindex="-1"></a><span class="co">#&gt; 4 OoakJhWiyZp HfVjCurKxh2 202308  367190</span></span>
+<span id="cb3-45"><a href="#cb3-45" tabindex="-1"></a><span class="co">#&gt; 5 siOyOiOJpI8 HfVjCurKxh2 202311  671394</span></span>
+<span id="cb3-46"><a href="#cb3-46" tabindex="-1"></a><span class="co">#&gt; # ℹ 13 more rows</span></span></code></pre></div>
 <ul>
 <li><strong>Apply Filters:</strong> Use the filters parameter to specify
 dimensions for filtering data without including them in the
 response.</li>
 </ul>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="co"># Filter by period</span></span>
-<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>pe <span class="sc">%.f%</span> <span class="st">&#39;LAST_YEAR&#39;</span></span>
-<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a></span>
-<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a><span class="co"># Filter by organisation unit</span></span>
-<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a>ou <span class="sc">%.f%</span> <span class="st">&#39;USER_ORGUNIT&#39;</span></span>
-<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a></span>
-<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a><span class="co"># showing in the analytics. filter by organisation unit with id &#39;qKzosKQPl6G&#39;</span></span>
-<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a><span class="co"># and period &#39;LAST_YEAR&#39;</span></span>
-<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a><span class="fu">get_analytics</span>(</span>
-<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a>    dx <span class="sc">%.d%</span> <span class="fu">c</span>(<span class="st">&#39;siOyOiOJpI8&#39;</span>, <span class="st">&#39;Lt0FqtnHraW&#39;</span>, <span class="st">&#39;OoakJhWiyZp&#39;</span>),</span>
-<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a>    pe <span class="sc">%.f%</span> <span class="st">&#39;LAST_YEAR&#39;</span>,</span>
-<span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a>    ou <span class="sc">%.f%</span> <span class="st">&#39;qKzosKQPl6G&#39;</span></span>
-<span id="cb5-13"><a href="#cb5-13" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="co"># Filter by period</span></span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>pe <span class="sc">%.f%</span> <span class="st">&#39;LAST_YEAR&#39;</span></span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="co">#&gt; &lt;spliced&gt;</span></span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a><span class="co">#&gt; $filter</span></span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a><span class="co">#&gt; [1] &quot;pe:LAST_YEAR&quot;</span></span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a><span class="co"># Filter by organisation unit</span></span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a>ou <span class="sc">%.f%</span> <span class="st">&#39;USER_ORGUNIT&#39;</span></span>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a><span class="co">#&gt; &lt;spliced&gt;</span></span>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a><span class="co">#&gt; $filter</span></span>
+<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a><span class="co">#&gt; [1] &quot;ou:USER_ORGUNIT&quot;</span></span>
+<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a></span>
+<span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a><span class="co"># showing in the analytics. filter by organisation unit with id &#39;qKzosKQPl6G&#39;</span></span>
+<span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a><span class="co"># and period &#39;LAST_YEAR&#39;</span></span>
+<span id="cb4-15"><a href="#cb4-15" tabindex="-1"></a><span class="fu">get_analytics</span>(</span>
+<span id="cb4-16"><a href="#cb4-16" tabindex="-1"></a>    dx <span class="sc">%.d%</span> <span class="fu">c</span>(<span class="st">&#39;siOyOiOJpI8&#39;</span>, <span class="st">&#39;Lt0FqtnHraW&#39;</span>, <span class="st">&#39;OoakJhWiyZp&#39;</span>),</span>
+<span id="cb4-17"><a href="#cb4-17" tabindex="-1"></a>    pe <span class="sc">%.f%</span> <span class="st">&#39;LAST_YEAR&#39;</span>,</span>
+<span id="cb4-18"><a href="#cb4-18" tabindex="-1"></a>    ou <span class="sc">%.f%</span> <span class="st">&#39;qKzosKQPl6G&#39;</span></span>
+<span id="cb4-19"><a href="#cb4-19" tabindex="-1"></a>)</span>
+<span id="cb4-20"><a href="#cb4-20" tabindex="-1"></a><span class="co">#&gt; # A tibble: 3 × 2</span></span>
+<span id="cb4-21"><a href="#cb4-21" tabindex="-1"></a><span class="co">#&gt;   dx          value</span></span>
+<span id="cb4-22"><a href="#cb4-22" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;       &lt;dbl&gt;</span></span>
+<span id="cb4-23"><a href="#cb4-23" tabindex="-1"></a><span class="co">#&gt; 1 OoakJhWiyZp  5092</span></span>
+<span id="cb4-24"><a href="#cb4-24" tabindex="-1"></a><span class="co">#&gt; 2 siOyOiOJpI8 20554</span></span>
+<span id="cb4-25"><a href="#cb4-25" tabindex="-1"></a><span class="co">#&gt; 3 Lt0FqtnHraW 31101</span></span></code></pre></div>
 </div>
 </div>
 
